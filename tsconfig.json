@@ -9,7 +9,9 @@
     "strict": true,
     "baseUrl": "./src",
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true
   },
   "lib": ["ES2020"]
 }

@@ -1,15 +1,22 @@
 import faker from "@faker-js/faker";
 import UserModel from "../Models/UserModel";
+import ConfigHelper from "../Helpers/ConfigHelper";
 
 export default class UserRepository {
-    user = new UserModel();
-    public createSeederUser(count: number) {
+    globalHelper =new ConfigHelper();
 
+    public  createSeederUser(count: number) :UserModel[] {
+        let user = new UserModel();
+        let listUser = [];
         for (let _i = 0; _i < count; _i++) {
-            this.user.ega = 20;
-          //  this.userModel.name ="victor";
-            //console.log(faker.name.firstName());
-            console.log(this.user.ega);
+            user.name = faker.name.firstName() + ' ' + faker.name.lastName();
+            user.ega = this.globalHelper.getRandomInt(20, 99);
+            user.email = faker.internet.email();
+            listUser.push(user);
+            user.save(user);
         }
+        return listUser;
+
     }
+
 }
