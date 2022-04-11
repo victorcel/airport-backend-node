@@ -34,9 +34,9 @@ export default class ConfigHelper {
                 "response": _data
             });
     }
-    
-    public responseError(_response: Response, _data: object):Response{
-        return _response.status(200).json(
+
+    public responseError(_response: Response, code: Number, _data: object): Response {
+        return _response.status(Number(code)).json(
             {
                 "successful": false,
                 "response": _data

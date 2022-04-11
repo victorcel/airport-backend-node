@@ -22,7 +22,7 @@ export default class UserController {
 
             return _configHelper.responseSuccessful(_response, responseValidate);
         } catch (error) {
-            return _configHelper.responseError(_response,Object(error))
+            return _configHelper.responseError(_response,400, Object(error))
 
         }
     }
