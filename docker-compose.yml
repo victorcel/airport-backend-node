@@ -1,0 +1,16 @@
+version: '3.7'
+
+services:
+  ariport-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: node-14
+    volumes:
+      - ./src:/home/node/app/src
+      - ./nodemon.json:/home/node/app/nodemon.json
+    expose:
+      - '8080'
+    ports:
+      - '5400:8080'
+    command: npm run start
