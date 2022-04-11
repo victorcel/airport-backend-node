@@ -1,7 +1,7 @@
-class UserModel {
-    private _name: string;
-    private _email: string;
-    private _ega: number;
+export default class UserModel {
+    private _name!: string;
+    private _email!: string;
+    private _ega!: number;
 
     get name(): string {
         return this._name;
@@ -26,4 +26,6 @@ class UserModel {
     set ega(value: number) {
         this._ega = value;
     }
+
+    save(){}
 }
