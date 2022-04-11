@@ -8,7 +8,7 @@ services:
       target: node-14
     volumes:
       - ./src:/home/node/app/src
-      - ./nodemon.json:/home/node/app/nodemon.json
+      - ./nodemon1.json:/home/node/app/nodemon1.json
     expose:
       - '8080'
     ports:
