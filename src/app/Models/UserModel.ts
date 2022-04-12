@@ -42,13 +42,11 @@ export default class UserModel {
         database.collection('users')
             .doc()
             .set(userModel.toJson())
-            .then((response) => {
-                return true;
-            }).catch((error) => {
+            .catch((error) => {
             console.log('ERROR SAVE USERS: ' + error.message);
             return false;
         });
-        return false
+        return true
     }
 
 }

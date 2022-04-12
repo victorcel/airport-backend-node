@@ -1,12 +1,11 @@
 import {Request, Response} from "express";
 import {Type, validate} from "validate-typescript";
 import UserRepository from "../Repositories/UserRepository";
-import ConfigHelper from "../Helpers/ConfigHelper";
 
 export default class UserController {
 
     static handle(_request: Request, _response: Response): Response {
-        const _configHelper = new ConfigHelper();
+
         try {
 
             const {numberOfPassengers} = _request.body;
@@ -20,10 +19,13 @@ export default class UserController {
 
             new UserRepository().createSeederUser(Number(responseValidate.numberOfPassengers));
 
-            return _configHelper.responseSuccessful(_response, responseValidate);
+            return _response
+                .status(200)
+                .json(responseValidate);
         } catch (error) {
-            return _configHelper.responseError(_response,400, Object(error))
-
+            return _response
+                .status(200)
+                .json(Object(error))
         }
     }
 }

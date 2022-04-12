@@ -8,7 +8,6 @@ routerApi.get('/', function (_request, _response) {
     _response.send('API Airport Londres');
 })
 
-
-routerApi.post('/user', UserController.handle)
+routerApi.post('/v1/user', UserController.handle)
 
 export{ routerApi };

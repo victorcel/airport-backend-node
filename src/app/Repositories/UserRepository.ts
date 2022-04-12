@@ -15,8 +15,8 @@ export default class UserRepository {
             listUser.push(user);
             user.save(user);
         }
-        return listUser;
 
+        return listUser;
     }
 
 }
