@@ -5,11 +5,12 @@ import QueueService from "../Services/QueueService";
 
 export default class UserRepository {
     globalHelper = new ConfigHelper();
+    userModel = new UserModel();
 
-    public createSeederUser(count: number): UserModel[] {
+    public async createSeederUser(count: number): Promise<UserModel[][]> {
         const countTicket = 2;
         let listUser: UserModel[] = [];
-        let listTickets: UserModel[][] = [];
+        let listUserPerFlight: UserModel[][] = [];
 
         for (let _i = 0; _i < count; _i++) {
             let user = new UserModel();
@@ -18,7 +19,14 @@ export default class UserRepository {
             user.ega = this.globalHelper.getRandomInt(20, 99);
             user.email = faker.internet.email();
             listUser.push(user);
+            this.userModel.save(user).catch(console.error);
         }
+        let listWaitUser = await this.userModel
+            .listWaitingForFlight()
+
+        listWaitUser.forEach((data) => {
+            listUser.push(data)
+        })
 
         const groupTicket = Math.ceil(listUser.length / countTicket)
 
@@ -27,18 +35,23 @@ export default class UserRepository {
         let interval = countTicket;
 
         for (let i = 0; i < groupTicket; i++) {
-            listTickets.push(listUser.slice(initial, interval));
+            listUserPerFlight.push(listUser.slice(initial, interval));
             let ram = Math.floor(Math.random() * (99999999 - 99999)) + 1;
             initial += countTicket
             interval += countTicket;
         }
 
-        listTickets.map((data) => {
+        listUserPerFlight.map((data) => {
 
-            queueServices.addQueue(data)
+            if (data.length == countTicket) {
+                queueServices.addQueue(data)
+                return;
+            }
+
+            this.userModel.waitingForFlight(data).catch(console.error)
         })
-        //user.save(user);
-        return listUser;
+
+        return listUserPerFlight;
     }
 
 }

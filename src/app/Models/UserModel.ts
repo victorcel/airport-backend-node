@@ -9,6 +9,8 @@ export default class UserModel {
     private _ega!: number;
     private database: FirebaseFirestore.Firestore;
 
+    public WAITING_FOR_FLIGHT = "waiting_for_flight"
+
 
     constructor() {
         this.database = firebaseService.firestore();
@@ -48,7 +50,7 @@ export default class UserModel {
 
     public toJson() {
         return {
-            'id': this.ID,
+            'id': this._ID,
             'name': this._name,
             'ega': this._ega,
             'email': this._email,
@@ -56,9 +58,9 @@ export default class UserModel {
         };
     }
 
-    public save(userModel: UserModel): boolean {
+    public async save(userModel: UserModel): Promise<boolean> {
 
-        this.database.collection('users')
+        await this.database.collection('users')
             .doc()
             .set(userModel.toJson())
             .catch((error) => {
@@ -69,69 +71,26 @@ export default class UserModel {
         return true
     }
 
-    public async createTicket() {
-        const countTicket = 20;
+    public async waitingForFlight(userModel: UserModel[]) {
+        return userModel.map((data) => {
+            return this.database.collection(this.WAITING_FOR_FLIGHT).doc().set(data.toJson())
+        });
+    }
 
-        this.database.collection('users')
-            .where("isBoarded", "==", false)
-            .limitToLast(10)
-            .onSnapshot((data) => {
+    public async listWaitingForFlight(): Promise<UserModel[]> {
+        let userModel: UserModel[] = []
+        let data = await this.database.collection(this.WAITING_FOR_FLIGHT).get()
 
-                let listTickets: { user: UserModel; docID: string; }[][] = [];
-                let datos = data.docs.map((value: QueryDocumentSnapshot) => {
-
-                    let user = new UserModel();
-                    user.name = value.data().name;
-                    user.email = value.data().email;
-                    user.ega = value.data().ega;
-
-                    return {
-                        user,
-                        docID: value.ref.id
-                    };
-
-                });
-                //
-                // const groupTicket = Math.ceil(datos.length / countTicket)
-                //
-                // data.forEach((value)=>{
-                //     console.log(value.ref.id)
-                // })
-
-                // for (let i = 0; i < groupTicket; i++) {
-                //
-                //     let initial = 0
-                //     let interval = countTicket;
-                //     listTickets.push(datos.slice(initial, interval));
-                //    //  let ram = Math.floor(Math.random() * (1000 - 1)) + 1;
-                //    //
-                //    //  let tickets = datos.slice(initial, interval);
-                //    //
-                //    // await this.database.collection('tickets').doc().set({
-                //    //      ID: ram,
-                //    //      users: tickets.map((users) => {
-                //    //          return users.docID
-                //    //      })
-                //    //  })
-                //    //  console.log(tickets)
-                //     initial += countTicket
-                //     interval += countTicket;
-                // }
-
-                // console.log(listTickets)
-                // listTickets.forEach((tickets) => {
-                //
-                //     console.log(ram)
-                //
-                // })
-
-                // data.forEach((doc: QueryDocumentSnapshot) => {
-                //     doc.ref.update({
-                //         isBoarded: true
-                //     })
-                // })
-            });
-
+        data.forEach((value: QueryDocumentSnapshot) => {
+            let user = new UserModel()
+            user.ID = value.data().id;
+            user.name = value.data().name;
+            user.ega = value.data().ega;
+            user.email = value.data().email;
+            userModel.push(user)
+            value.ref.delete()
+        });
+        return userModel;
     }
 
 }

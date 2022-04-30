@@ -4,6 +4,7 @@ import UserModel from "../Models/UserModel";
 export default class QueueService {
 
     private readonly queue;
+    private DELAY_DURATION = 60000
 
     constructor(nameQueue: string) {
         const {REDIS_HOST, REDIS_PORT} = process.env;
@@ -16,7 +17,7 @@ export default class QueueService {
                 },
                 limiter: {
                     max: 1000,
-                    duration: 60000
+                    duration:this.DELAY_DURATION
                 }
             });
     }
@@ -28,6 +29,6 @@ export default class QueueService {
     }
 
     public addQueue(userModel: UserModel[]) {
-        this.queue.add(userModel);
+       return  this.queue.add(userModel, {delay: this.DELAY_DURATION});
     }
 }
