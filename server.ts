@@ -1,8 +1,12 @@
 import express from 'express';
 import bodyParser from "body-parser";
 import { routerApi } from "./src/app/Routes/ApiRoute";
+import dotenv from "dotenv";
+import UserModel from "./src/app/Models/UserModel";
 
 const app = express();
+
+dotenv.config();
 
 app.use(bodyParser.json());
 
