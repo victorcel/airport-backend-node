@@ -8,7 +8,7 @@ export default class UserRepository {
     userModel = new UserModel();
 
     public async createSeederUser(count: number): Promise<UserModel[][]> {
-        const countTicket = 2;
+        const countTicket = 20;
         let listUser: UserModel[] = [];
         let listUserPerFlight: UserModel[][] = [];
 
@@ -36,7 +36,6 @@ export default class UserRepository {
 
         for (let i = 0; i < groupTicket; i++) {
             listUserPerFlight.push(listUser.slice(initial, interval));
-            let ram = Math.floor(Math.random() * (99999999 - 99999)) + 1;
             initial += countTicket
             interval += countTicket;
         }

@@ -1,6 +1,7 @@
 import {firebaseService} from "../Services/FirebaseService";
 import {firestore} from "firebase-admin";
 import QueryDocumentSnapshot = firestore.QueryDocumentSnapshot;
+import TicketModel from "./TicketModel";
 
 export default class UserModel {
     private _ID!: string;
@@ -93,4 +94,15 @@ export default class UserModel {
         return userModel;
     }
 
+    public abortions(ticket: TicketModel){
+       return ticket.listUser?.forEach((id) => {
+           this.database.collection('users').where("id", "==", id).get().then((data) => {
+               data.forEach((result) => {
+                   result.ref.update({
+                       isBoarded: true
+                   })
+               })
+           })
+       });
+    }
 }
