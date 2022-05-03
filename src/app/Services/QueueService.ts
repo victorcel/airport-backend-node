@@ -20,7 +20,7 @@ export default class QueueService {
                 },
                 limiter: {
                     max: 1,
-                    duration: 10000
+                    duration: this.DELAY_DURATION
                 },
                 defaultJobOptions: {
                     removeOnComplete: true
