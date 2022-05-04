@@ -1,5 +1,6 @@
 import express from 'express';
 import UserController from "../Controller/UserController";
+import ReportController from "../Controller/ReportController";
 
 let routerApi = express.Router();
 
@@ -9,5 +10,7 @@ routerApi.get('/', function (_request, _response) {
 })
 
 routerApi.post('/v1/user', UserController.handle)
+
+routerApi.get('/v1/metric', ReportController.handler)
 
 export{ routerApi };
