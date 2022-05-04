@@ -1,7 +1,7 @@
 version: '3.7'
 
 services:
-  ariport-backend:
+  airport-backend:
     build:
       context: .
       dockerfile: Dockerfile
@@ -14,3 +14,8 @@ services:
     ports:
       - '8080:8080'
     command: npm run start
+
+  redis_db:
+    image: "redis:alpine"
+    expose:
+      - '6379'
