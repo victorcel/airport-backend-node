@@ -2,6 +2,7 @@ import {firebaseService} from "../Services/FirebaseService";
 import {firestore} from "firebase-admin";
 import QueryDocumentSnapshot = firestore.QueryDocumentSnapshot;
 import TicketModel from "./TicketModel";
+import {raw} from "express";
 
 export default class UserModel {
     private _ID!: string;
@@ -61,7 +62,7 @@ export default class UserModel {
 
     public async save(userModel: UserModel): Promise<boolean> {
 
-        await this.database.collection('users')
+         await this.database.collection('users')
             .doc()
             .set(userModel.toJson())
             .catch((error) => {
@@ -94,15 +95,34 @@ export default class UserModel {
         return userModel;
     }
 
-    public abortions(ticket: TicketModel){
-       return ticket.listUser?.forEach((id) => {
-           this.database.collection('users').where("id", "==", id).get().then((data) => {
-               data.forEach((result) => {
-                   result.ref.update({
-                       isBoarded: true
-                   })
-               })
-           })
-       });
+    public abortions(ticket: TicketModel) {
+        return ticket.listUser?.forEach((id) => {
+            this.database.collection('users').where('id', '==', id).get().then((data) => {
+                data.forEach((result) => {
+                    result.ref.update({
+                        isBoarded: true
+                    })
+                })
+            })
+        });
+    }
+
+    public async clientsServed() {
+        const data = await this.database.collection('users').where('isBoarded', '==', true).get();
+        return data.size
+    }
+
+    public async averageAgeOfPeopleServed(){
+        const data = await this.database.collection('users').limit(10).get()
+        const listEga = data.docs.map((value)=>{
+            return value.data().ega
+        })
+        let sum = listEga.reduce((previous, current) => current += previous);
+        return  Math.ceil(sum / listEga.length);
+    }
+
+    public async peopleWaiting(){
+        const data = await this.database.collection('users').where('isBoarded', '==', false).get();
+        return data.size
     }
 }

@@ -44,5 +44,11 @@ export default class TicketModel {
             .catch(console.error);
 
         new UserModel().abortions(ticket)
+        return;
+    }
+
+    public async flightsGenerated() {
+        const data = await this.database.collection('tickets').get()
+        return data.size
     }
 }
