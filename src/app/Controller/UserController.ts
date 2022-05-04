@@ -24,7 +24,7 @@ export default class UserController {
                 .json(responseValidate);
         } catch (error) {
             return _response
-                .status(200)
+                .status(500)
                 .json(Object(error))
         }
     }
